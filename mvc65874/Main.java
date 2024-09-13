@@ -13,6 +13,6 @@ public class Main {
 
         // Show the GUI
         view.setVisible(true);
-        System.out.println("git test2");
+        System.out.println("git test");
     }
 }
