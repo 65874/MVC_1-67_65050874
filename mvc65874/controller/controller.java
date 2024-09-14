@@ -24,7 +24,8 @@ public class controller {
         this.viewWh = viewWh;
         this.view.addSubmitButtonListener(new SubmitButtonListener());
         this.viewWh.addWhMilkingButtonListener(new WhMilkingButtonListener());
-        this.viewWh.addBrMilkingButtonListener(new BrMilkingButtonListener());
+        this.viewWh.addLimeButtonListener(new LimeButtonListener());
+        this.viewBr.addBrMilkingButtonListener(new BrMilkingButtonListener());
     }
 
     private class SubmitButtonListener implements ActionListener {
@@ -37,9 +38,11 @@ public class controller {
             if (cowData[1].equals("White")) {
                 view.setVisible(false);
                 viewWh.setVisible(true);
+                viewBr.setVisible(false);
                 viewWh.displayWhCow(cowData);
             } else {
                 view.setVisible(false);
+                viewWh.setVisible(false);
                 viewBr.setVisible(true);
                 viewBr.displayBrCow(cowData);
             }
@@ -54,7 +57,20 @@ public class controller {
 
             viewWh.displayWhCowMilking(cowData, modelWh.mileking(cowData));
             view.setVisible(false);
+            viewBr.setVisible(false);
             viewWh.setVisible(true);
+
+        }
+    }
+
+    private class LimeButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Get cow code from the viewInput
+
+            viewWh.displayWhCowMilking(cowData, modelWh.mileking(cowData));
+            view.setVisible(false);
+            viewBr.setVisible(true);
 
         }
     }
@@ -64,9 +80,10 @@ public class controller {
         public void actionPerformed(ActionEvent e) {
             // Get cow code from the viewInput
 
-            viewWh.displayWhCowMilking(cowData, modelWh.mileking(cowData));
+            viewBr.displayBrCowMilking(cowData, modelWh.mileking(cowData));
             view.setVisible(false);
-            viewWh.setVisible(true);
+            viewWh.setVisible(false);
+            viewBr.setVisible(true);
 
         }
     }
