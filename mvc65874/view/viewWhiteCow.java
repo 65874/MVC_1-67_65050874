@@ -55,7 +55,7 @@ public class viewWhiteCow extends JFrame {
     }
 
     public void addLimeButtonListener(ActionListener listener) {
-        milkingButton.addActionListener(listener);
+        addLimeButton.addActionListener(listener);
         System.out.println("addlime");
     }
 }

@@ -9,7 +9,7 @@ public class Main {
         // Create the model, view, and controller
         model model = new model();
         modelWhite modelWh = new modelWhite(model);
-        modelBrown modelBr = new modelBrown();
+        modelBrown modelBr = new modelBrown(model);
 
         viewInput view = new viewInput();
         viewWhiteCow viewWh = new viewWhiteCow();

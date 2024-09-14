@@ -54,11 +54,10 @@ public class controller {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Get cow code from the viewInput
-
-            viewWh.displayWhCowMilking(cowData, modelWh.mileking(cowData));
             view.setVisible(false);
             viewBr.setVisible(false);
             viewWh.setVisible(true);
+            viewWh.displayWhCowMilking(cowData, modelWh.milking(cowData));
 
         }
     }
@@ -67,10 +66,11 @@ public class controller {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Get cow code from the viewInput
-
-            viewWh.displayWhCowMilking(cowData, modelWh.mileking(cowData));
+            modelWh.addlemon();
             view.setVisible(false);
-            viewBr.setVisible(true);
+            viewBr.setVisible(false);
+            viewWh.setVisible(true);
+            viewWh.displayWhCowMilking(cowData, "add lemon");
 
         }
     }
@@ -79,8 +79,7 @@ public class controller {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Get cow code from the viewInput
-
-            viewBr.displayBrCowMilking(cowData, modelWh.mileking(cowData));
+            viewBr.displayBrCowMilking(cowData, modelBr.milking(cowData));
             view.setVisible(false);
             viewWh.setVisible(false);
             viewBr.setVisible(true);

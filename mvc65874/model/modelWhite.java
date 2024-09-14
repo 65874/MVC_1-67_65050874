@@ -11,17 +11,18 @@ public class modelWhite {
         this.model = model;
     }
 
-    public String mileking(String[] cowData) {
+    public String milking(String[] cowData) {
         Random random = new Random();
         int month = Integer.parseInt(cowData[3]);
+        int code = Integer.parseInt(cowData[0]);
 
         if (isBSOD) {
-            model.updateMilking(Integer.parseInt(cowData[4]));
             return "This cow is in BSOD state (Blue) and cannot produce milk until reset.";
         }
 
         if (hasEatenLemon) {
-            return "The cow has eaten a lemon and is immune to BSOD. Producing regular milk.";
+            model.updateMilking(code);
+            return "The cow has eaten a lemon and is immune to BSOD. Producing Sour milk.";
         }
 
         int bsodChance = (int) (month * 0.5 * 10); // This represents the percentage
@@ -31,9 +32,12 @@ public class modelWhite {
             isBSOD = true;
             return "BSOD triggered! The cow is now Blue and cannot produce milk.";
         }
-
-        model.updateMilking(Integer.parseInt(cowData[4]));
+        model.updateMilking(code);
         return "Producing regular milk.";
+    }
+
+    public void addlemon() {
+        hasEatenLemon = true;
     }
 
 }
