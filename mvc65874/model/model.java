@@ -87,6 +87,7 @@ public class model {
         for (String[] song : songs) {
             String[] singers = song[2].split(", ");
             for (String singer : singers) {
+                System.out.println(singer);
                 totalChars += singer.length();
             }
         }
