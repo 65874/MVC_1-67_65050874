@@ -1,18 +1,24 @@
 package mvc65874;
 
-import mvc65874.view.view;
+import mvc65874.view.*;
 import mvc65874.controller.controller;
-import mvc65874.model.model;
+import mvc65874.model.*;
 
 public class Main {
     public static void main(String[] args) {
         // Create the model, view, and controller
         model model = new model();
-        view view = new view();
-        new controller(model, view);
+        modelWhite modelWh = new modelWhite(model);
+        modelBrown modelBr = new modelBrown();
+
+        viewInput view = new viewInput();
+        viewWhiteCow viewWh = new viewWhiteCow();
+        viewBrownCow viewBr = new viewBrownCow();
+        new controller(model, modelWh, modelBr, view, viewBr, viewWh);
 
         // Show the GUI
         view.setVisible(true);
-        System.out.println("git");
+        // viewWh.setVisible(true);
+        // viewBr.setVisible(true);
     }
 }

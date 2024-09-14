@@ -3,10 +3,11 @@ package mvc65874.model;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class model {
-    private String csvFile = "songs.csv"; // CSV file for storing song data
-    private List<String[]> songs = new ArrayList<>(); // To store the songs data
+    private String csvFile = "cow.csv";
+    private List<String[]> cowList = new ArrayList<>();
 
     // Constructor - Load existing songs from CSV or create if not exists
     public model() {
@@ -22,8 +23,7 @@ public class model {
     // Method to create the CSV file with headers
     private void createCSVFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
-            // Write the header row (SongName, Duration, Singers, Score)
-            String header = "SongName,Duration,Singers,Score";
+            String header = "Code,Color,year,month,milking time";
             bw.write(header);
             bw.newLine();
             System.out.println("CSV file created with headers.");
@@ -34,67 +34,80 @@ public class model {
 
     // Initialize the CSV file with default data
     private void initializeDefaultData() {
-        addSong("Song1", 180, new String[] { "John" }, 80);
-        addSong("Song2", 150, new String[] { "Jane", "Thomas" }, 60);
-        addSong("Song3", 200, new String[] { "Chris", "Lisa", "Tom" }, 75);
+        String[] color = { "Brown", "White" };
+        Random rand = new Random();
+
+        for (int i = 1; i < 11; i++) {
+            int code = rand.nextInt(10000000, 99999999);
+            int year = rand.nextInt(11); // Random year between 0 and 10
+            int month = rand.nextInt(12); // Random month between 0 and 11
+            addCow(code, color[i % 2], year, month, 0);
+        }
     }
 
-    // Method to add song data
-    public void addSong(String songName, int duration, String[] singers, int score) {
-        String[] songData = { songName, String.valueOf(duration), String.join(", ", singers), String.valueOf(score) };
-        songs.add(songData);
+    // Method to add cow data
+    public void addCow(int code, String color, int year, int month, int milkingTime) {
+        String[] cowData = { String.valueOf(code), color, String.valueOf(year), String.valueOf(month),
+                String.valueOf(milkingTime) };
+        cowList.add(cowData);
+        System.out.println(cowList);
         saveToCSV();
     }
 
-    // Method to calculate score based on the number of singers
-    public int calculateScore(String[] singers, int duration) {
-        int score = 0;
-
-        if (singers.length == 1) {
-            // Calculate score for one singer
-            int totalPreviousDuration = getTotalPreviousDuration();
-            score = totalPreviousDuration % 100;
-        } else if (singers.length == 2) {
-            // Calculate score for two singers
-            int totalChars = singers[0].length() + singers[1].length();
-            score = (duration * totalChars) % 100;
-        } else if (singers.length == 3) {
-            // Calculate score for three singers
-            int previousSingerChars = getPreviousSingersCharCount();
-            int currentSingerChars = singers[0].length() + singers[1].length() + singers[2].length();
-            score = (previousSingerChars * currentSingerChars) % 100;
-        }
-
-        return score;
-    }
-
-    // Get the total duration of all previous songs
-    private int getTotalPreviousDuration() {
-        int totalDuration = 0;
-        for (String[] song : songs) {
-            try {
-                totalDuration += Integer.parseInt(song[1]);
-            } catch (NumberFormatException e) {
-                System.out.println("Error parsing duration: " + e.getMessage());
+    // Method to get the year for a specific cow by code
+    public int getYear(int code) {
+        for (String[] cow : cowList) {
+            if (Integer.parseInt(cow[0]) == code) {
+                return Integer.parseInt(cow[2]);
             }
         }
-        return totalDuration;
+        return -1;
     }
 
-    // Get the total number of characters in previous singers' names
-    private int getPreviousSingersCharCount() {
-        int totalChars = 0;
-        for (String[] song : songs) {
-            String[] singers = song[2].split(", ");
-            for (String singer : singers) {
-                System.out.println(singer);
-                totalChars += singer.length();
+    // Method to get data for a specific cow by code
+    public String[] getCowByCode(int code) {
+        for (String[] cow : cowList) {
+            if (Integer.parseInt(cow[0]) == code) {
+                return cow;
             }
         }
-        return totalChars;
+        return null;
     }
 
-    // Method to load songs from the CSV file
+    // Method to get the month for a specific cow by code
+    public int getMonth(int code) {
+        for (String[] cow : cowList) {
+            if (Integer.parseInt(cow[0]) == code) {
+                return Integer.parseInt(cow[3]); // Return the month
+            }
+        }
+        return -1; // Return -1 if cow not found
+    }
+
+    public boolean updateMilking(int code) {
+        for (String[] cow : cowList) {
+            if (Integer.parseInt(cow[0]) == code) {
+                int time = Integer.parseInt(cow[4]) + 1;
+                cow[4] = String.valueOf(time);
+                saveToCSV(); // Save the updated data
+                return true;
+            }
+        }
+        return false; // Return false if the cow with the given code was not found
+    }
+
+    public boolean resetCow(int code) {
+        for (String[] cow : cowList) {
+            if (Integer.parseInt(cow[0]) == code) {
+                cow[4] = String.valueOf(0);
+                saveToCSV(); // Save the updated data
+                return true;
+            }
+        }
+        return false; // Return false if the cow with the given code was not found
+    }
+
+    // Method to load cows from the CSV file
     private void loadFromCSV() {
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
@@ -104,9 +117,9 @@ public class model {
                     isFirstLine = false; // Skip the header
                     continue;
                 }
-                String[] songData = line.split(",");
-                if (songData.length == 4) { // Make sure we only add valid rows
-                    songs.add(songData);
+                String[] cowData = line.split(",");
+                if (cowData.length == 5) { // Make sure we only add valid rows
+                    cowList.add(cowData);
                 }
             }
         } catch (IOException e) {
@@ -114,17 +127,17 @@ public class model {
         }
     }
 
-    // Method to save songs to the CSV file
+    // Method to save cow to the CSV file
     private void saveToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
             // Write the header first
-            String header = "SongName,Duration,Singers,Score";
+            String header = "Code,Color,year,month,milking time";
             bw.write(header);
             bw.newLine();
 
-            // Write all songs data
-            for (String[] song : songs) {
-                bw.write(String.join(",", song));
+            // Write all cows data
+            for (String[] cow : cowList) {
+                bw.write(String.join(",", cow));
                 bw.newLine();
             }
         } catch (IOException e) {
